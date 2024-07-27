@@ -29,6 +29,12 @@
       };
 
       # Unrelease projects
+      bellman-ford = pkgs.fetchFromGitHub {
+        owner = "ksenia-portu";
+        repo = "bellman-ford";
+        rev = "d1d0af3c9a8cef6343f2e2299e4442e2095e42d2";
+        sha256 = "sha256-CYK4Nn9DKwy2AYa8jMzhjGHEw4r8FHpT93GNE7SYRGs=";
+      };
       xstatic = pkgs.fetchFromGitHub {
         owner = "TristanCacqueray";
         repo = "haskell-xstatic";
@@ -52,6 +58,8 @@
 
       haskellExtend = hpFinal: hpPrev:
         let
+          # mk-bellman-ford = name:
+          #   hpPrev.callCabal2nix "${name}" "${bellman-ford}/${name}" { };
           mk-xstatic-lib = name:
             hpPrev.callCabal2nix "${name}" "${xstatic}/${name}" { };
           mk-large-rec = name:
@@ -98,6 +106,7 @@
               broken = false;
             }));
 
+          # bellman-ford = mk-bellman-ford "bellman-ford";
           xstatic = mk-xstatic-lib "xstatic";
           xstatic-th = mk-xstatic-lib "xstatic-th";
           lucid-xstatic = mk-xstatic-lib "lucid-xstatic";
@@ -123,6 +132,9 @@
           # extra effectful package
           servant-effectful =
             hpPrev.callCabal2nix "servant-effectful" servant-effectful { };
+
+          bellman-ford =
+            hpPrev.callCabal2nix "bellman-ford" bellman-ford { };
 
           # there is a test failure: resolveGroupController should resolve a direct mount root
           cgroup-rts-threads = pkgs.haskell.lib.dontCheck
@@ -161,7 +173,7 @@
           eventlog2html = mk-exe hspkgs.eventlog2html;
           profiteur = mk-exe hspkgs.profiteur;
           calligraphy = mk-exe hspkgs.calligraphy;
-          apply-refact = mk-exe hspkgs.apply-refact;
+          # apply-refact = mk-exe hspkgs.apply-refact;
           tasty-discover = mk-exe hspkgs.tasty-discover;
           nixfmt = mk-exe hspkgs.nixfmt;
           cabal-fmt = mk-exe hspkgs.cabal-fmt;
@@ -246,7 +258,7 @@
         pkgs.fourmolu
         pkgs.hlint
         pkgs.hpack
-        pkgs.apply-refact
+        # pkgs.apply-refact
         pkgs.hspkgs.hoogle
         pkgs.calligraphy
         pkgs.haskell-language-server
